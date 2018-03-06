@@ -6,7 +6,7 @@
 
 #define PLUGIN_AUTHOR      "2called-chaos"
 #define PLUGIN_NAME        "CS:GO Webshortcuts"
-#define PLUGIN_VERSION     "1.0.0"
+#define PLUGIN_VERSION     "1.0.1"
 #define PLUGIN_DESCRIPTION "Provides chat/command triggered web shortcuts"
 #define PLUGIN_URL         "https://github.com/2called-chaos/csgo_webshortcuts"
 
