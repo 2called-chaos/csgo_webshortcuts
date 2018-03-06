@@ -34,6 +34,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <csgo_motdfix>
 
 #undef REQUIRE_PLUGIN
 #include <mapchooser>
@@ -52,6 +53,7 @@ public Plugin myinfo =
 
 ConVar g_Cvar_TriggerShow;
 ConVar g_Cvar_TimeleftInterval;
+ConVar g_Cvar_MotdUrl;
 ConVar g_Cvar_FriendlyFire;
 
 Handle g_Timer_TimeShow = null;
@@ -75,6 +77,7 @@ public void OnPluginStart()
 
 	g_Cvar_TriggerShow = CreateConVar("sm_trigger_show", "0", "Display triggers message to all players? (0 off, 1 on, def. 0)", 0, true, 0.0, true, 1.0);
 	g_Cvar_TimeleftInterval = CreateConVar("sm_timeleft_interval", "0.0", "Display timeleft every x seconds. Default 0.", 0, true, 0.0, true, 1800.0);
+	g_Cvar_MotdUrl = CreateConVar("sm_motd_url", "", "URL to open when 'motd' is typed, leave blank to use motd.txt");
 	g_Cvar_FriendlyFire = FindConVar("mp_friendlyfire");
 
 	RegConsoleCmd("timeleft", Command_Timeleft);
@@ -231,7 +234,7 @@ public Action Command_Motd(int client, int args)
 	if (!IsClientInGame(client))
 		return Plugin_Handled;
 
-	ShowMOTDPanel(client, "Message Of The Day", "motd", MOTDPANEL_TYPE_INDEX);
+	ShowMOTDPanelClient(client);
 
 	return Plugin_Handled;
 }
@@ -321,7 +324,7 @@ public void OnClientSayCommand_Post(int client, const char[] command, const char
 	}
 	else if (strcmp(sArgs, "motd", false) == 0)
 	{
-		ShowMOTDPanel(client, "Message Of The Day", "motd", MOTDPANEL_TYPE_INDEX);
+		ShowMOTDPanelClient(client);
 	}
 }
 
@@ -526,5 +529,20 @@ void ShowFriendlyFire(int client)
 		{
 			PrintToChat(client,"[SM] %t", phrase);
 		}
+	}
+}
+
+void ShowMOTDPanelClient(int client)
+{
+	char motd_url[128];
+	g_Cvar_MotdUrl.GetString(motd_url, sizeof(motd_url));
+
+	if (motd_url[0] == EOS)
+	{
+		ShowMOTDPanel(client, "Message Of The Day", "motd", MOTDPANEL_TYPE_INDEX);
+	}
+	else
+	{
+		MOTDFixOpenURL(client, "", motd_url);
 	}
 }
