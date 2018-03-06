@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+  <body>
+    <script type="text/javascript">
+      window.onload = function() {
+        var hashparts, optstr, url;
+        hashparts = window.location.hash.split("#");
+        hashparts.shift(); // always empty
+        optstr = hashparts.shift(); // window options
+        url = hashparts.join("#"); // rest = url
+
+        // open a new window with the desired URL and options
+        window.open(url, "", optstr);
+
+        // "break" the original window otherwise the game will always open
+        // the same page despite different parameters (URL) passed to
+        // ShowMOTDPanel function. This is essentially the fix.
+        window.location.replace("http://deadsite.notworking");
+      };
+    </script>
+  </body>
+</html>
